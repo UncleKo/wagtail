@@ -1,0 +1,61 @@
+[
+  {
+    "type": "title_and_text",
+    "value": {
+      "title": "Welcome to StartupLIfe",
+      "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!"
+    },
+    "id": "0fe8e5d2-8c91-428a-b40f-76f833bb5272"
+  },
+  {
+    "type": "full_richtext",
+    "value": "<p><i>Lorem ipsum dolor sit amet consectetur adipisicing elit</i>. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p><a id=\"3\" linktype=\"page\">Lorem ipsum</a> dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p>",
+    "id": "c658102d-06bc-4e49-8693-ed3c4eee57e8"
+  },
+  {
+    "type": "simple_richtext",
+    "value": "<p><i>Lorem ipsum dolor sit amet consectetur adipisicing elit</i>. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p><a id=\"3\" linktype=\"page\">Lorem ipsum</a> dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p><p></p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p>",
+    "id": "e6486279-b9c6-42fb-8ae9-45b84ae4a8db"
+  },
+  {
+    "type": "cards",
+    "value": {
+      "title": "Staff Cards",
+      "cards": [
+        {
+          "image": 2,
+          "title": "Clara",
+          "text": "Oswald",
+          "button_page": null,
+          "button_url": "https://google.com/"
+        },
+        {
+          "image": 3,
+          "title": "Matt",
+          "text": "Smith",
+          "button_page": 3,
+          "button_url": ""
+        },
+        {
+          "image": 4,
+          "title": "Jane",
+          "text": "Doe",
+          "button_page": 4,
+          "button_url": ""
+        }
+      ]
+    },
+    "id": "a6e2c927-ff3c-43e2-9fe2-4329966e2260"
+  },
+  {
+    "type": "cta",
+    "value": {
+      "title": "Call to Action Title",
+      "text": "<p><i>Lorem ipsum dolor sit amet consectetur adipisicing elit</i>. Nulla pariatur nostrum tempora corrupti cupiditate perferendis, quia asperiores, ea magnam provident, maiores tempore beatae. Similique excepturi cupiditate ad illo? Vel, sed!</p>",
+      "button_page": 3,
+      "button_url": "https://github.com/UncleKo",
+      "button_text": "Learn More"
+    },
+    "id": "181b5ced-0a00-412e-877c-b34776bd189f"
+  }
+]

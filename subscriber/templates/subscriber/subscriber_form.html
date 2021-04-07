@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+<div class="container">
+  {% block content %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="border-bottm mb-4">購読する</legend>
+      {{ form | crispy }}
+    </fieldset>
+    <button class="btn btn-outline-info mt-3" type="submit">購読する</button>
+  </form>
+  {% endblock %}
+</div>
