@@ -11,7 +11,7 @@ class PostAdmin(ModelAdmin):
 
   model = BlogDetailPage
   menu_label = "Posts"
-  menu_icon = "edit"
+  menu_icon = "folder"
   # menu_order = 1
   # add_to_settings_menu = False
   # exclude_from_explorer = False

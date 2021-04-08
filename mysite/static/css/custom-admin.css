@@ -1,0 +1,40 @@
+:root {
+  --color-primary: #008cba;
+  --color-primary-darker: #007095;
+  --color-primary-dark: #004e68;
+}
+
+/* header {
+  background-color: #008cba;
+} */
+
+/* a, a:hover {
+  color: #008cba;
+} */
+
+.nav-wrapper .inner {
+  /* background-color: #; */
+}
+
+.messages .success {
+  background-color: #008cba;
+}
+
+/* .button {
+  background-color: #008cba;
+}   */
+
+/* header .button {
+  background-color: #e1c105;
+}
+header .button:hover {
+  background-color: #fada1f;
+} */
+
+.nav-wrapper .inner {
+	padding-top: 1.5rem;
+}
+
+.logo {
+  display: none;
+}
