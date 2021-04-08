@@ -11,6 +11,10 @@ ALLOWED_HOSTS = ['*']
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+INSTALLED_APPS = INSTALLED_APPS + [
+  'wagtail.contrib.styleguide',
+]
+
 
 try:
     from .local import *

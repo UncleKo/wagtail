@@ -13,7 +13,19 @@
 } */
 
 .nav-wrapper .inner {
-  /* background-color: #; */
+  background-color: #575757;
+}
+
+.nav-search input {
+  background-color: #737373;
+}
+
+.nav-main .menu-active {
+  background: #444;
+}
+
+.nav-main .account {
+  background: #333;
 }
 
 .messages .success {

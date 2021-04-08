@@ -42,6 +42,9 @@ class HomePage(RoutablePageMixin, Page):
 
   template = "home/home_page.html"
   max_count =1 # Only one homepage instance
+  # parent_page_type = [
+  #   'wagtailcore.Page'
+  # ]
 
   banner_title = models.CharField(max_length=100, blank=False, null=True)
   banner_subtitle = RichTextField(features=["bold", "italic"])

@@ -4,18 +4,27 @@ from wagtail.contrib.modeladmin.options import (
   ModelAdminGroup,
   modeladmin_register,
 )
-from .models import BlogDetailPage, BlogCategory
+from .models import ArticleBlogPage, VideoBlogPage, BlogCategory
 
-class PostAdmin(ModelAdmin):
+class ArticlePostAdmin(ModelAdmin):
   """Subscriber admin."""
 
-  model = BlogDetailPage
+  model = ArticleBlogPage
   menu_label = "Posts"
   menu_icon = "folder"
   # menu_order = 1
   # add_to_settings_menu = False
   # exclude_from_explorer = False
-  list_display = ("title", "custom_title", "first_published_at", "categories")
+  list_display = ("title", "custom_title", "first_published_at")
+  search_fields = ("title", "custom_title", "content")
+
+class VideoPostAdmin(ModelAdmin):
+  """Subscriber admin."""
+
+  model = VideoBlogPage
+  menu_label = "Videos"
+  menu_icon = "folder"
+  list_display = ("title", "custom_title", "first_published_at")
   search_fields = ("title", "custom_title", "content")
 
 class BlogCategoryAdmin(ModelAdmin):
@@ -34,7 +43,7 @@ class BlogAdminGroup(ModelAdminGroup):
     menu_label = "Blog"
     menu_icon = "folder-open-1"
     menu_order = 290
-    items = (PostAdmin, BlogCategoryAdmin)
+    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin)
 
 # modeladmin_register(PostAdmin)
 # modeladmin_register(BlogCategoryAdmin)
