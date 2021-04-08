@@ -5,7 +5,17 @@
 {% block content %}
 
   <a href="{% routablepageurl page 'latest_posts' %}">View latest Posts Only</a>
-  <p>Special Link is {{ special_link }}</p>
+
+  <h2>Categories</h2>
+  <ul>
+    {% for cat in categories %}
+      <li>
+        <a href="?category={{ cat.slug }}">
+          {{ cat.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 
   <div class="container">
     {% for post in posts %}

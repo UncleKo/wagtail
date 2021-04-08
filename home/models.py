@@ -24,9 +24,16 @@ class HomePageCarouselImages(Orderable):
     on_delete=models.SET_NULL,
     related_name="+"
   )
+  image_alt = models.CharField(
+    max_length=100,
+    blank=True,
+    null=True,
+    help_text='Add some alt text',
+  )
 
   panels = [
-    ImageChooserPanel("carousel_image")
+    ImageChooserPanel("carousel_image"),
+    FieldPanel("image_alt", heading="Image Alt (Option)"),
   ]
 
 

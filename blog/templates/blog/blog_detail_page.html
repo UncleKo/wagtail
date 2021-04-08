@@ -6,11 +6,38 @@
 {% block content %}
   {% image self.blog_image fill-1200x300 as banner %}
   <img src="{{ banner.url }}" alt="{% if self.image_alt %}{{ self.image_alt }}{% else %}{{ banner.alt }}{% endif %}" style="width: 100%; height:auto">
+
   <div class="container mt-5 mb-5">
     <div class="text-center">
       <h1>{{ self.custom_title }}</h1>
     </div>
   </div>
+
+  <ul>
+    {% for iter in self.blog_authors.all %}
+      {% image iter.author.image fill-50x50 as img %}
+      <img src="{{ img.url }}" alt="{{ iter.author.name }}">
+      <li>
+        {{ iter.author.name }}
+        {% if iter.author.website %}
+          <a href="{{ iter.author.website }}">
+            (website)
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Categories</h2>
+  <ul>
+    {% for cat in self.categories.all %}
+      <li>
+        <a href="{{ self.get_parent.url }}?category={{ cat.slug }}">
+          {{ cat.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 
   <div class="container">
     <div class="row">

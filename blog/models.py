@@ -1,14 +1,32 @@
+from django import forms
 from django.db import models
 from django.shortcuts import render
 
-from wagtail.core.models import Page
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+
+from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import StreamField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.snippets.models import register_snippet
 
 from streams import blocks
+
+
+class BlogAuthorsOrderable(Orderable):
+  """This allows us to select one or more blog authors"""
+
+  page = ParentalKey("blog.BlogDetailPage", related_name="blog_authors")
+  author = models.ForeignKey(
+    "blog.BlogAuthor",
+    on_delete=models.CASCADE,
+  )
+
+  panels = [
+    SnippetChooserPanel("author"),
+  ]
 
 
 class BlogAuthor(models.Model):
@@ -52,6 +70,34 @@ class BlogAuthor(models.Model):
 register_snippet(BlogAuthor)
 
 
+class BlogCategory(models.Model):
+  """Blog category for a snippet."""
+
+  name = models.CharField(max_length=255)
+  slug = models.SlugField(
+    verbose_name="slug",
+    allow_unicode=True,
+    max_length=255,
+    help_text='A slug to identify posts by this category'
+  )
+
+  panels = [
+    FieldPanel("name"),
+    FieldPanel("slug"),
+  ]
+
+  def __str__(self):
+    """String repr of this class."""
+    return self.name
+
+  class Meta:
+    verbose_name = "Blog Category"
+    verbose_name_plural = "Blog Categories"
+    ordering = ["name"]
+
+register_snippet(BlogCategory)
+
+
 class BlogListingPage(RoutablePageMixin, Page):
   """Listing page lists all the Blog Detail Pages."""
 
@@ -73,6 +119,7 @@ class BlogListingPage(RoutablePageMixin, Page):
     """Adding custom stuff to our context."""
     context = super().get_context(request, *args, **kwargs)
     context["posts"] = BlogDetailPage.objects.live().public().order_by('-first_published_at')
+    context["categories"] = BlogCategory.objects.all()
     context["special_link"] = self.reverse_subpage('latest_posts')
     return context
 
@@ -107,6 +154,7 @@ class BlogDetailPage(Page):
     blank=False,
     null=False,
     help_text='Overwrites the default title',
+    # verbose_name="タイトル"
   )
   blog_image = models.ForeignKey(
     "wagtailimages.Image",
@@ -121,6 +169,8 @@ class BlogDetailPage(Page):
     null=True,
     help_text='Add some alt text',
   )
+
+  categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
 
   content = StreamField(
     [
@@ -139,5 +189,15 @@ class BlogDetailPage(Page):
     FieldPanel("custom_title"),
     ImageChooserPanel("blog_image"),
     FieldPanel("image_alt", heading="Image Alt (Option)"),
+    MultiFieldPanel(
+      [
+        InlinePanel("blog_authors", label="Author", min_num=1, max_num=4)
+      ],
+      heading="Author(s)"
+    ),
+    FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
     StreamFieldPanel("content"),
   ]
+
+  parent_page_types = ['blog.BlogListingPage']
+  # subpage_types = []

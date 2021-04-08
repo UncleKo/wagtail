@@ -22,7 +22,7 @@
     {% image loop_cycle.carousel_image fill-2000x400 as img %}
     <!-- <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}"> -->
     <div class="carousel-item{% if forloop.first %} active{% endif %}">
-      <img src="{{ img.url }}" class="d-block w-100" alt="{{ img.alt }}">
+      <img src="{{ img.url }}" class="d-block w-100" alt="{% if loop_cycle.image_alt %}{{ loop_cycle.image_alt }}{% else %}{{ img.alt }}{% endif %}">
     </div>
     {% endfor %}
   </div>

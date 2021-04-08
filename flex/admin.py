@@ -14,7 +14,7 @@ class FlexPageAdmin(ModelAdmin):
   menu_order = 300
   add_to_settings_menu = False
   exclude_from_explorer = False
-  list_display = ("subtitle", "content")
-  search_fields = ("subtitle", "content")
+  list_display = ("title", "subtitle", "first_published_at")
+  search_fields = ("title", "subtitle", "content")
 
 modeladmin_register(FlexPageAdmin)
