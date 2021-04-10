@@ -1,7 +1,7 @@
 from django import forms
 from django.db import models
 from django.shortcuts import render
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
@@ -259,20 +259,8 @@ class ArticleBlogPage(BlogDetailPage):
         FieldPanel("subtitle"),
         ImageChooserPanel("banner_image"),
         ImageChooserPanel("intro_image"),
-        MultiFieldPanel(
-            [
-                InlinePanel("blog_authors", label="Author",
-                            min_num=1, max_num=4)
-            ],
-            heading="Author(s)"
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel(
-                    "categories", widget=forms.CheckboxSelectMultiple)
-            ],
-            heading="Categories"
-        ),
+        InlinePanel("blog_authors", label="Author(s)", min_num=1, max_num=4),
+        FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
         StreamFieldPanel("content"),
     ]
 
@@ -289,18 +277,8 @@ class VideoBlogPage(BlogDetailPage):
         FieldPanel("custom_title"),
         # FieldPanel("tags"),
         ImageChooserPanel("banner_image"),
-        MultiFieldPanel(
-            [
-                InlinePanel("blog_authors", label="Author", min_num=1, max_num=4)
-            ],
-            heading="Author(s)"
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("categories", widget=forms.CheckboxSelectMultiple)
-            ],
-            heading="Categories"
-        ),
+        InlinePanel("blog_authors", label="Author(s)", min_num=1, max_num=4),
+        FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
         FieldPanel("youtube_video_id"),
         StreamFieldPanel("content"),
     ]

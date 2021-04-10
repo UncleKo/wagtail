@@ -1,4 +1,3 @@
-
 from wagtail.contrib.modeladmin.options import (
   ModelAdmin,
   modeladmin_register,
@@ -6,7 +5,6 @@ from wagtail.contrib.modeladmin.options import (
 from .models import FlexPage
 
 class FlexPageAdmin(ModelAdmin):
-  """Subscriber admin."""
 
   model = FlexPage
   menu_label = "Flex Pages"

@@ -7,10 +7,9 @@ from wagtail.contrib.modeladmin.options import (
 from .models import ArticleBlogPage, VideoBlogPage, BlogCategory
 
 class ArticlePostAdmin(ModelAdmin):
-  """Subscriber admin."""
 
   model = ArticleBlogPage
-  menu_label = "Posts"
+  menu_label = "Articles"
   menu_icon = "folder"
   # menu_order = 1
   # add_to_settings_menu = False
@@ -19,7 +18,6 @@ class ArticlePostAdmin(ModelAdmin):
   search_fields = ("title", "custom_title", "content")
 
 class VideoPostAdmin(ModelAdmin):
-  """Subscriber admin."""
 
   model = VideoBlogPage
   menu_label = "Videos"
@@ -28,7 +26,6 @@ class VideoPostAdmin(ModelAdmin):
   search_fields = ("title", "custom_title", "content")
 
 class BlogCategoryAdmin(ModelAdmin):
-  """Subscriber admin."""
 
   model = BlogCategory
   menu_label = "Categories"

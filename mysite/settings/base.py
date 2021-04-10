@@ -29,9 +29,10 @@ INSTALLED_APPS = [
     'flex',
     'streams',
     'site_settings',
-    'subscriber',
+    'subscribers',
     'blog',
     'core',
+    'menus',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.modeladmin',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
     'crispy_forms',
+    'wagtailmenus',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,6 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'wagtail.contrib.settings.context_processors.settings'
+                'wagtail.contrib.settings.context_processors.settings',
+                'wagtailmenus.context_processors.wagtailmenus',
             ],
         },
     },

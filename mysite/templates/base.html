@@ -1,5 +1,7 @@
-{% load static wagtailuserbar %}
+{% load static wagtailuserbar menus_tags menu_tags %}
 {% load crispy_forms_tags %}
+
+{% get_menu "main" as nav %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -46,13 +48,21 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+
+        {% for menu_item in nav.menu_items.all %}
+        <li class="nav-item">
+          <a href="{{ menu_item.link }}" class="nav-link" {% if menu_item.open_in_new_tab %}target="_blank" {% endif
+            %}>{{ menu_item.title }}</a>
+        </li>
+        {% endfor %}
+
+        <!-- <li class="nav-item">
                     <a class="nav-link" href="/blog/">Blog</a>
                 </li>
                 <li class="nav-item">
@@ -68,15 +78,19 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Separated link</a>
                     </div>
-                </li>
-            </ul>
-            <!-- <form class="form-inline my-2 my-lg-0">
+                </li> -->
+      </ul>
+      <!-- <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
             </form> -->
-        </div>
+    </div>
   </nav>
 
+  <nav class="navbar-expand-lg">
+    <!-- {% main_menu template="menus/bootstrap3/main_menu_dropdown.html" sub_menu_template="menus/bootstrap3/sub_menu_dropdown.html"%} -->
+    {% main_menu template="menus/main_menu_dropdown.html" sub_menu_template="menus/sub_menu_dropdown.html"%}
+  </nav>
 
   {% block content %}{% endblock %}
 

@@ -8,8 +8,8 @@ from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
-# from subscriber import views as subscriber_views
-from subscriber.views import * 
+# from subscribers import views as subscriber_views
+from subscribers.views import * 
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),

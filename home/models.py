@@ -10,7 +10,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from streams import blocks
-from subscriber.form import SubscriberCreateForm
+from subscribers.form import SubscriberCreateForm
 
 
 class HomePageCarouselImages(Orderable):
@@ -20,7 +20,7 @@ class HomePageCarouselImages(Orderable):
   carousel_image = models.ForeignKey(
     "wagtailimages.Image",
     null=True,
-    blank=False,
+    blank=True,
     on_delete=models.SET_NULL,
     related_name="+"
   )
@@ -78,9 +78,7 @@ class HomePage(RoutablePageMixin, Page):
       ImageChooserPanel("banner_image"),
       PageChooserPanel("banner_cta"),
     ], heading="Banner Options"),
-    MultiFieldPanel([
-      InlinePanel("carousel_images", max_num=5, min_num=1, label="Image"),
-    ], heading="Carousel Images"),
+    InlinePanel("carousel_images", max_num=5, min_num=1, label="Carousel Images"),
     StreamFieldPanel("content"),
   ]
 
