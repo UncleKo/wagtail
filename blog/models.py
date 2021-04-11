@@ -1,4 +1,8 @@
 from django import forms
+# from django.http import Http404
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.shortcuts import render
 # from django.contrib.auth.models import User
@@ -123,11 +127,44 @@ class BlogListingPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
-        context["posts"] = BlogDetailPage.objects.live(
-        ).public().order_by('-first_published_at')
+        all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at')
+
+        paginator = Paginator(all_posts, 1)
+
+        page = request.GET.get("page")
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(page.num_pages)
+
+        context["posts"] = posts
+
         context["categories"] = BlogCategory.objects.all()
-        context["special_link"] = self.reverse_subpage('latest_posts')
+        # context["special_link"] = self.reverse_subpage('latest_posts')
         return context
+
+    @route(r'^category/(?P<cat_slug>[-\w]*)/$', name="category_view")
+    def category_view(self, request, cat_slug):
+        """Find blog posts based on a category."""
+        context = self.get_context(request)
+
+        try:
+            category = BlogCategory.objects.get(slug=cat_slug)
+        except Exception:
+            category = None
+
+        if category is None:
+            messages.error(request, "このカテゴリーは存在しません。")
+            return redirect('/blog/')
+
+        # except BlogCategory.DoesNotExist:
+        #     raise Http404("このカテゴリーは存在しません。")
+
+
+        context["posts"] = BlogDetailPage.objects.filter(categories__in=[category])
+        return render(request, "blog/blog_listing_page.html", context)
 
     @route(r'^latest/$', name="latest_posts")
     def latest_blog_posts(self, request, *args, **kwargs):
@@ -153,7 +190,7 @@ class BlogListingPage(RoutablePageMixin, Page):
         return render(request, "blog/blog_listing_page.html", context)
 
     ### Other Sample Queries ###
-    # posts = BlogDetailPage.objects.live().exact_type(BlogDetailPage) 
+    # posts = BlogDetailPage.objects.live().exact_type(BlogDetailPage)
     # posts = BlogDetailPage.objects.live().not_exact_type(BlogDetailPage)
     # articles = BlogDetailPage.objects.live().exact_type(ArticleBlogPage).specific(defer=False)
     # posts = BlogDetailPage.objects.live().not_exact_type(BlogDetailPage).specific()

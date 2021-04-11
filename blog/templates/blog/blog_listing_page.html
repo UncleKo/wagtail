@@ -10,7 +10,10 @@
   Categories:
   <small>
     {% for cat in categories %}
+    <!-- <a href="{{ self.url }}category/{{ cat.slug }}"> -->
+    <a href="{% routablepageurl page 'category_view' cat.slug %}">
     {{ cat.name }}
+    </a>
     {% endfor %}
   </small>
 </h2>
