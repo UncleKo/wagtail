@@ -8,6 +8,8 @@ from django.shortcuts import render
 # from django.contrib.auth.models import User
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from taggit.models import TaggedItemBase, Tag
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import StreamField
@@ -105,6 +107,13 @@ class BlogCategory(models.Model):
 register_snippet(BlogCategory)
 
 
+class BlogPageTag(TaggedItemBase):
+  content_object = ParentalKey(
+    'BlogDetailPage',
+    related_name='BlogDetailPage',
+    on_delete=models.CASCADE,
+  )
+
 class BlogListingPage(RoutablePageMixin, Page):
     """Listing page lists all the Blog Detail Pages."""
 
@@ -124,24 +133,22 @@ class BlogListingPage(RoutablePageMixin, Page):
         FieldPanel("custom_title"),
     ]
 
+
     def get_context(self, request, *args, **kwargs):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
         all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at')
 
-        paginator = Paginator(all_posts, 1)
+        # if request.GET.get('tag', None):
+        #   tag = request.GET.get('tag')
+        #   all_posts = all_posts.filter(tags__slug__in=[tag])
 
-        page = request.GET.get("page")
-        try:
-            posts = paginator.page(page)
-        except PageNotAnInteger:
-            posts = paginator.page(1)
-        except EmptyPage:
-            posts = paginator.page(page.num_pages)
-
+        posts = paginate(request, all_posts, 2)
         context["posts"] = posts
 
         context["categories"] = BlogCategory.objects.all()
+        context["tags"] = Tag.objects.all()
+        context["taged_items"] = BlogPageTag.objects.all()
         # context["special_link"] = self.reverse_subpage('latest_posts')
         return context
 
@@ -153,17 +160,33 @@ class BlogListingPage(RoutablePageMixin, Page):
         try:
             category = BlogCategory.objects.get(slug=cat_slug)
         except Exception:
-            category = None
-
-        if category is None:
-            messages.error(request, "このカテゴリーは存在しません。")
+            messages.error(request, "指定されたカテゴリーは存在しませんでした。")
             return redirect('/blog/')
-
         # except BlogCategory.DoesNotExist:
         #     raise Http404("このカテゴリーは存在しません。")
 
+        all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(categories__in=[category])
+        posts = paginate(request, all_posts, 1)
+        context["posts"] = posts
 
-        context["posts"] = BlogDetailPage.objects.filter(categories__in=[category])
+        return render(request, "blog/blog_listing_page.html", context)
+
+    @route(r'^tag/(?P<tag_slug>[-\w]*)/$', name="tag_view")
+    def tag_view(self, request, tag_slug):
+        """Find blog posts based on a tag."""
+        context = self.get_context(request)
+
+        try:
+            tag = Tag.objects.get(slug=tag_slug)
+        except Exception:
+            messages.error(request, "指定されたタグは存在しませんでした。")
+            return redirect('/blog/')
+
+        # context["posts"] = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(tags__slug__in=[tag])
+        all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(tags__in=[tag])
+        posts = paginate(request, all_posts, 1)
+        context["posts"] = posts
+        
         return render(request, "blog/blog_listing_page.html", context)
 
     @route(r'^latest/$', name="latest_posts")
@@ -212,6 +235,9 @@ class BlogListingPage(RoutablePageMixin, Page):
 class BlogDetailPage(Page):
     """Parental blog detail page."""
 
+    parent_page_types = ['blog.BlogListingPage']
+    subpage_types = []
+
     # author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts", null=True, blank=True)
 
     custom_title = models.CharField(
@@ -236,6 +262,7 @@ class BlogDetailPage(Page):
     )
 
     categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
     content = StreamField(
         [
@@ -262,11 +289,10 @@ class BlogDetailPage(Page):
             heading="Author(s)"
         ),
         FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
+        FieldPanel("tags"),
         StreamFieldPanel("content"),
     ]
 
-    parent_page_types = ['blog.BlogListingPage']
-    subpage_types = []
 
     ### didn't work. How? ###
     # def form_valid(self, form):
@@ -298,6 +324,7 @@ class ArticleBlogPage(BlogDetailPage):
         ImageChooserPanel("intro_image"),
         InlinePanel("blog_authors", label="Author(s)", min_num=1, max_num=4),
         FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
+        FieldPanel("tags"),
         StreamFieldPanel("content"),
     ]
 
@@ -316,6 +343,21 @@ class VideoBlogPage(BlogDetailPage):
         ImageChooserPanel("banner_image"),
         InlinePanel("blog_authors", label="Author(s)", min_num=1, max_num=4),
         FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
+        FieldPanel("tags"),
         FieldPanel("youtube_video_id"),
         StreamFieldPanel("content"),
     ]
+
+
+def paginate(request, all_posts, count):
+    paginator = Paginator(all_posts, count)
+
+    page = request.GET.get("page")
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(page.num_pages)
+    
+    return posts

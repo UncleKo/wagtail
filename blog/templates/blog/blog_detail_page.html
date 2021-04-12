@@ -33,7 +33,7 @@
     {% for cat in self.categories.all %}
       <li>
         <a href="{{ self.get_parent.url }}?category={{ cat.slug }}">
-          {{ cat.name }}
+          {{ cat }}
         </a>
       </li>
     {% endfor %}

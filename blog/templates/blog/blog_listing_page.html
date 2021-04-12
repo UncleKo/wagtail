@@ -12,11 +12,33 @@
     {% for cat in categories %}
     <!-- <a href="{{ self.url }}category/{{ cat.slug }}"> -->
     <a href="{% routablepageurl page 'category_view' cat.slug %}">
-    {{ cat.name }}
+    {{ cat }}
     </a>
     {% endfor %}
   </small>
 </h2>
+
+<h2>
+  Tags:
+  <small>
+    {% for tag in tags %}
+    <a href="{% routablepageurl page 'tag_view' tag.slug %}">
+    {{ tag.name }}
+    </a>
+    {% endfor %}
+  </small>
+</h2>
+
+<h5>
+  Tags(参照):
+  <small>
+    {% for item in taged_items %}
+    <a href="{% routablepageurl page 'tag_view' item.tag.slug %}">
+    {{ item.tag }}
+    </a>
+    {% endfor %}
+  </small>
+</h5>
 
 <div class="container">
   {% for post in posts %}

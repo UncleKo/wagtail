@@ -15,11 +15,14 @@ class ArticlePostAdmin(ModelAdmin):
   # menu_order = 1
   # add_to_settings_menu = False
   # exclude_from_explorer = False
-  list_display = ("title", "custom_title", "get_categories", "first_published_at")
+  list_display = ("title", "custom_title", "get_categories", "get_tags", "first_published_at")
   search_fields = ("title", "custom_title", "content")
 
   def get_categories(self, obj):
     return ",\n".join([category.name for category in obj.categories.all()])
+
+  def get_tags(self, obj):
+    return ",\n".join([tag.name for tag in obj.tags.all()])
 
 
 class VideoPostAdmin(ModelAdmin):
@@ -27,12 +30,14 @@ class VideoPostAdmin(ModelAdmin):
   model = VideoBlogPage
   menu_label = "Videos"
   menu_icon = "folder"
-  list_display = ("title", "custom_title", "get_categories", "first_published_at")
+  list_display = ("title", "custom_title", "get_categories", "get_tags", "first_published_at")
   search_fields = ("title", "custom_title", "content")
 
   def get_categories(self, obj):
     return ",\n".join([category.name for category in obj.categories.all()])
 
+  def get_tags(self, obj):
+    return ",\n".join([tag.name for tag in obj.tags.all()])
 
 class BlogCategoryAdmin(ModelAdmin):
 
