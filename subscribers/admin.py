@@ -10,7 +10,7 @@ class SubscriberAdmin(ModelAdmin):
   model = Subscriber
   menu_label = "Subscriber"
   menu_icon = "mail"
-  menu_order = 500
+  menu_order = 550
   add_to_settings_menu = False
   exclude_from_explorer = False
   list_display = ("email", "full_name")

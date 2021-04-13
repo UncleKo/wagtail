@@ -4,7 +4,7 @@ from wagtail.contrib.modeladmin.options import (
   ModelAdminGroup,
   modeladmin_register,
 )
-from .models import ArticleBlogPage, VideoBlogPage, BlogCategory
+from .models import ArticleBlogPage, VideoBlogPage, BlogCategory, BlogAuthor
 
 
 class ArticlePostAdmin(ModelAdmin):
@@ -50,12 +50,19 @@ class BlogCategoryAdmin(ModelAdmin):
   list_display = ("name", "slug")
   search_fields = ("name")
 
+class BlogAuthorAdmin(ModelAdmin):
+
+  model = BlogAuthor
+  menu_label = "Blog Author"
+  menu_icon = "placeholder"
+  list_display = ("name", "website")
+  search_fields = ("name")
 
 class BlogAdminGroup(ModelAdminGroup):
     menu_label = "Blog"
     menu_icon = "folder-open-1"
     menu_order = 290
-    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin)
+    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin, BlogAuthorAdmin)
 
 # modeladmin_register(PostAdmin)
 # modeladmin_register(BlogCategoryAdmin)

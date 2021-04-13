@@ -17,9 +17,23 @@ from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiField
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.snippets.models import register_snippet
+# from wagtail.snippets.models import register_snippet
 
 from streams import blocks
+
+
+def paginate(request, all_posts, count):
+    paginator = Paginator(all_posts, count)
+
+    page = request.GET.get("page")
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(page.num_pages)
+    
+    return posts
 
 
 class BlogAuthorsOrderable(Orderable):
@@ -75,7 +89,7 @@ class BlogAuthor(models.Model):
         verbose_name_plural = "Blog Authors"
 
 
-register_snippet(BlogAuthor)
+# register_snippet(BlogAuthor)
 
 
 class BlogCategory(models.Model):
@@ -104,7 +118,7 @@ class BlogCategory(models.Model):
         ordering = ["name"]
 
 
-register_snippet(BlogCategory)
+# register_snippet(BlogCategory)
 
 
 class BlogPageTag(TaggedItemBase):
@@ -348,16 +362,3 @@ class VideoBlogPage(BlogDetailPage):
         StreamFieldPanel("content"),
     ]
 
-
-def paginate(request, all_posts, count):
-    paginator = Paginator(all_posts, count)
-
-    page = request.GET.get("page")
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(page.num_pages)
-    
-    return posts
