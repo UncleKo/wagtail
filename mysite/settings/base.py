@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'taggit',
     'crispy_forms',
     'wagtailmenus',
+    'captcha',
+    'wagtailcaptcha',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -179,3 +181,10 @@ WAGTAIL_SITE_NAME = "mysite"
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
+
+
+
+# Recaptcha settings
+RECAPTCHA_PUBLIC_KEY = "6LebY6gaAAAAAMRpgjK31rLkfULVbhE9dIEoUUse"
+RECAPTCHA_PRIVATE_KEY = "6LebY6gaAAAAAAwj63mIbTaUv38RugvAI3v4vf0M"
+NOCAPTCHA = True

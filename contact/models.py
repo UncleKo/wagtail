@@ -1,6 +1,7 @@
 from django.db import models
 
 from modelcluster.fields import ParentalKey
+from wagtail.snippets.models import register_snippet
 from wagtail.admin.edit_handlers import (
   FieldPanel,
   FieldRowPanel,
@@ -12,7 +13,8 @@ from wagtail.contrib.forms.models import (
   AbstractEmailForm,
   AbstractFormField
 )
-from wagtail.snippets.models import register_snippet
+
+from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 
 class FormField(AbstractFormField):
@@ -22,7 +24,8 @@ class FormField(AbstractFormField):
     related_name='form_fields'
   )
 
-class ContactPage(AbstractEmailForm):
+# class ContactPage(AbstractEmailForm):
+class ContactPage(WagtailCaptchaEmailForm):
 
   parent_page_types = ['home.HomePage']
   subpage_types = []
