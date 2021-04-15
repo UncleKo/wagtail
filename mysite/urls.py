@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('search/', search_views.search, name='search'),
     path('sitemap.xml', sitemap),
+    path('', include('allauth.urls')),
 
     # path('subscribe/', subscriber_views.SubscriberCreateView.as_view(), name='subscribe'),
     path('subscribe/', SubscriberCreateView.as_view(), name='subscribe'),

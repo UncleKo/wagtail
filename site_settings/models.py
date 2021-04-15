@@ -24,8 +24,6 @@ class SocialMediaSettings(BaseSetting):
   ]
 
 
-# Wagtail Adminに項目が表示されてしまうので、context_processorにすべきかも？ -> To Do
-@register_setting
 class SubscriptionForm(BaseSetting):
 
   form = SubscriberCreateForm()

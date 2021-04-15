@@ -87,10 +87,10 @@ class HomePage(RoutablePageMixin, Page):
   # # #   context = super().get_context_data(**kwargs) 
   # # def get_context(self, request):
   # #   context = super(HomePage, self).get_context(request)
-  # def get_context(self, request, *args, **kwargs):
-  #   context = super().get_context(request, *args, **kwargs)
-  #   context['subscription_form'] = SubscriberCreateForm()
-  #   return context
+  def get_context(self, request, *args, **kwargs):
+    context = super().get_context(request, *args, **kwargs)
+    context['subscription_form'] = SubscriberCreateForm()
+    return context
 
   class Meta:
 

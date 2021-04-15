@@ -148,17 +148,18 @@ class BlogListingPage(RoutablePageMixin, Page):
     ]
 
 
+
     def get_context(self, request, *args, **kwargs):
         """Adding custom stuff to our context."""
         context = super().get_context(request, *args, **kwargs)
         all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at')
+        pagination = BlogPagination.objects.first()
 
         # if request.GET.get('tag', None):
         #   tag = request.GET.get('tag')
         #   all_posts = all_posts.filter(tags__slug__in=[tag])
 
-        posts = paginate(request, all_posts, 2)
-        context["posts"] = posts
+        context["posts"] = paginate(request, all_posts, pagination.listing_page)
 
         context["categories"] = BlogCategory.objects.all()
         context["tags"] = Tag.objects.all()
@@ -180,8 +181,8 @@ class BlogListingPage(RoutablePageMixin, Page):
         #     raise Http404("このカテゴリーは存在しません。")
 
         all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(categories__in=[category])
-        posts = paginate(request, all_posts, 1)
-        context["posts"] = posts
+        pagination = BlogPagination.objects.first()
+        context["posts"] = paginate(request, all_posts, pagination.category_page)
 
         return render(request, "blog/blog_listing_page.html", context)
 
@@ -198,8 +199,8 @@ class BlogListingPage(RoutablePageMixin, Page):
 
         # context["posts"] = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(tags__slug__in=[tag])
         all_posts = BlogDetailPage.objects.live().public().order_by('-first_published_at').filter(tags__in=[tag])
-        posts = paginate(request, all_posts, 1)
-        context["posts"] = posts
+        pagination = BlogPagination.objects.first()
+        context["posts"] = paginate(request, all_posts, pagination.tag_page)
         
         return render(request, "blog/blog_listing_page.html", context)
 
@@ -362,3 +363,14 @@ class VideoBlogPage(BlogDetailPage):
         StreamFieldPanel("content"),
     ]
 
+class BlogPagination(models.Model):
+
+    listing_page = models.IntegerField(default=10)
+    category_page = models.IntegerField(default=10)
+    tag_page = models.IntegerField(default=10)
+
+    panels = [
+        FieldPanel("listing_page"),
+        FieldPanel("category_page"),
+        FieldPanel("tag_page"),
+    ]

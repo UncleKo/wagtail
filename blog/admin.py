@@ -4,7 +4,7 @@ from wagtail.contrib.modeladmin.options import (
   ModelAdminGroup,
   modeladmin_register,
 )
-from .models import ArticleBlogPage, VideoBlogPage, BlogCategory, BlogAuthor
+from .models import ArticleBlogPage, VideoBlogPage, BlogCategory, BlogAuthor, BlogListingPage,BlogPagination
 
 
 class ArticlePostAdmin(ModelAdmin):
@@ -39,30 +39,41 @@ class VideoPostAdmin(ModelAdmin):
   def get_tags(self, obj):
     return ",\n".join([tag.name for tag in obj.tags.all()])
 
+
 class BlogCategoryAdmin(ModelAdmin):
 
   model = BlogCategory
   menu_label = "Categories"
   menu_icon = "list-ul"
-  # menu_order = 2
-  # add_to_settings_menu = False
-  # exclude_from_explorer = False
-  list_display = ("name", "slug")
-  search_fields = ("name")
+  list_display = ["name"]
+  search_fields = ["name"]
 
 class BlogAuthorAdmin(ModelAdmin):
 
   model = BlogAuthor
   menu_label = "Blog Author"
   menu_icon = "placeholder"
-  list_display = ("name", "website")
-  search_fields = ("name")
+  list_display = ["name"]
+  search_fields = ["name"]
+
+class BlogListAdmin(ModelAdmin):
+
+  model = BlogListingPage
+  menu_label = "Blog Top"
+  menu_icon = "placeholder"
+  list_display = ['title']
+
+class BlogPaginationAdmin(ModelAdmin):
+
+  model = BlogPagination
+  menu_label = "Pagination"
+  menu_icon = "placeholder"
 
 class BlogAdminGroup(ModelAdminGroup):
     menu_label = "Blog"
     menu_icon = "folder-open-1"
     menu_order = 290
-    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin, BlogAuthorAdmin)
+    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin, BlogAuthorAdmin, BlogListAdmin, BlogPaginationAdmin)
 
 # modeladmin_register(PostAdmin)
 # modeladmin_register(BlogCategoryAdmin)
