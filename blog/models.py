@@ -6,6 +6,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.shortcuts import render
 # from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -20,20 +21,6 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 # from wagtail.snippets.models import register_snippet
 
 from streams import blocks
-
-
-def paginate(request, all_posts, count):
-    paginator = Paginator(all_posts, count)
-
-    page = request.GET.get("page")
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(page.num_pages)
-    
-    return posts
 
 
 class BlogAuthorsOrderable(Orderable):
@@ -92,6 +79,33 @@ class BlogAuthor(models.Model):
 # register_snippet(BlogAuthor)
 
 
+class BlogParentCategory(models.Model):
+    """Parent category for categories."""
+
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255)
+
+    panels = [
+        FieldPanel("name"),
+    ]
+
+    def __str__(self):
+        """String repr of this class."""
+        return self.name
+
+    class Meta:
+        verbose_name = "親カテゴリー"
+        verbose_name_plural = "親カテゴリー"
+        ordering = ["name"]
+
+    # slugを自動的に作成
+    def save(self, *args, **kwargs):
+        # 作成時のみ（後でTitleが変わっても、URL変わらないように）
+        if not self.id:
+            self.slug = slugify(self.name)
+        super(BlogParentCategory, self).save(*args, **kwargs)
+
+
 class BlogCategory(models.Model):
     """Blog category for a snippet."""
 
@@ -102,10 +116,12 @@ class BlogCategory(models.Model):
         max_length=255,
         help_text='A slug to identify posts by this category'
     )
+    parent = models.ForeignKey(BlogParentCategory, on_delete=models.SET_NULL, related_name="children", null=True, blank=True, verbose_name="親カテゴリー", help_text="親カテゴリーを先に登録して下さい。親カテゴリーが必要ないカテゴリーは、このフィールドは空のまま登録して下さい。")
 
     panels = [
         FieldPanel("name"),
         FieldPanel("slug"),
+        FieldPanel("parent"),
     ]
 
     def __str__(self):
@@ -124,7 +140,7 @@ class BlogCategory(models.Model):
 class BlogPageTag(TaggedItemBase):
   content_object = ParentalKey(
     'BlogDetailPage',
-    related_name='BlogDetailPage',
+    related_name='tagged_items',
     on_delete=models.CASCADE,
   )
 
@@ -161,9 +177,10 @@ class BlogListingPage(RoutablePageMixin, Page):
 
         context["posts"] = paginate(request, all_posts, pagination.listing_page)
 
-        context["categories"] = BlogCategory.objects.all()
+        context["parent_categories"] = BlogParentCategory.objects.all()
+        context["categories"] = BlogCategory.objects.filter(parent__isnull=True)
         context["tags"] = Tag.objects.all()
-        context["taged_items"] = BlogPageTag.objects.all()
+        # context["taged_items"] = BlogPageTag.objects.all()
         # context["special_link"] = self.reverse_subpage('latest_posts')
         return context
 
@@ -276,7 +293,7 @@ class BlogDetailPage(Page):
         help_text='Add some alt text',
     )
 
-    categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
+    categories = ParentalManyToManyField("blog.BlogCategory", blank=True, related_name="posts")
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
     content = StreamField(
@@ -374,3 +391,21 @@ class BlogPagination(models.Model):
         FieldPanel("category_page"),
         FieldPanel("tag_page"),
     ]
+
+    class Meta:
+        verbose_name = "Blog Pagination"
+        verbose_name_plural = "Blog Paginations"
+
+
+def paginate(request, all_posts, count):
+    paginator = Paginator(all_posts, count)
+
+    page = request.GET.get("page")
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(page.num_pages)
+    
+    return posts

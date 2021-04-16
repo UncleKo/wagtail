@@ -4,7 +4,7 @@ from wagtail.contrib.modeladmin.options import (
   ModelAdminGroup,
   modeladmin_register,
 )
-from .models import ArticleBlogPage, VideoBlogPage, BlogCategory, BlogAuthor, BlogListingPage,BlogPagination
+from .models import ArticleBlogPage, VideoBlogPage, BlogParentCategory, BlogCategory, BlogAuthor, BlogListingPage,BlogPagination
 
 
 class ArticlePostAdmin(ModelAdmin):
@@ -40,12 +40,20 @@ class VideoPostAdmin(ModelAdmin):
     return ",\n".join([tag.name for tag in obj.tags.all()])
 
 
+class BlogParentCategoryAdmin(ModelAdmin):
+
+  model = BlogParentCategory
+  menu_label = "親カテゴリー"
+  menu_icon = "list-ul"
+  list_display = ["name", "slug"]
+  search_fields = ["name"]
+
 class BlogCategoryAdmin(ModelAdmin):
 
   model = BlogCategory
-  menu_label = "Categories"
+  menu_label = "カテゴリー"
   menu_icon = "list-ul"
-  list_display = ["name"]
+  list_display = ["name", "slug"]
   search_fields = ["name"]
 
 class BlogAuthorAdmin(ModelAdmin):
@@ -73,7 +81,7 @@ class BlogAdminGroup(ModelAdminGroup):
     menu_label = "Blog"
     menu_icon = "folder-open-1"
     menu_order = 290
-    items = (ArticlePostAdmin, VideoPostAdmin, BlogCategoryAdmin, BlogAuthorAdmin, BlogListAdmin, BlogPaginationAdmin)
+    items = (ArticlePostAdmin, VideoPostAdmin, BlogParentCategoryAdmin, BlogCategoryAdmin, BlogAuthorAdmin, BlogListAdmin, BlogPaginationAdmin)
 
 # modeladmin_register(PostAdmin)
 # modeladmin_register(BlogCategoryAdmin)

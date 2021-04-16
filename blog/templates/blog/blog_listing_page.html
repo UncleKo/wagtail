@@ -6,20 +6,46 @@
 
 <a href="{% routablepageurl page 'latest_posts' %}">View latest Posts Only</a>
 
-<h2>
-  Categories:
+<h2>Categories:</h2>
   <small>
-    {% for cat in categories %}
-    <!-- <a href="{{ self.url }}category/{{ cat.slug }}"> -->
-    <a href="{% routablepageurl page 'category_view' cat.slug %}">
-    {{ cat }}
-    </a>
+    {% if parent_categories.count or categories.count %}
+    <ul>
+    {% for pcat in parent_categories %}
+      {% if pcat.children.count %}
+      <li>
+        {{ pcat }}
+          {% if pcat.children.count %}
+          <ul>
+          {% for cat in pcat.children.all %}
+            {% if cat.posts.count %}
+              <li>
+                <a href="{% routablepageurl page 'category_view' cat.slug %}">
+                {{ cat }} ({{ cat.posts.count }})
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+          {% endif %}
+      </li>
+      {% endif %}
     {% endfor %}
-  </small>
-</h2>
 
-<h2>
-  Tags:
+    {% for cat in categories %}
+      {% if cat.posts.count %}
+      <li>
+        <a href="{% routablepageurl page 'category_view' cat.slug %}">
+        {{ cat }} ({{ cat.posts.count }})
+        </a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+    </ul>
+    {% endif %}
+  </small>
+
+<h2>Tags:</h2>
   <small>
     {% for tag in tags %}
     <a href="{% routablepageurl page 'tag_view' tag.slug %}">
@@ -27,9 +53,8 @@
     </a>
     {% endfor %}
   </small>
-</h2>
 
-<h5>
+<!-- <h5>
   Tags(参照):
   <small>
     {% for item in taged_items %}
@@ -38,7 +63,7 @@
     </a>
     {% endfor %}
   </small>
-</h5>
+</h5> -->
 
 <div class="container">
   {% for post in posts %}
